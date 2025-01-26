@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('property_id');
             $table->enum('room_type', ['kamar tidur', 'kamar mandi', 'ruang tamu', 'dapur']);
-            $table->int('quantity');
+            $table->integer('quantity');
             $table->timestamps();
 
             //relationship properties
