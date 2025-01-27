@@ -29,6 +29,9 @@ Route::prefix('admin')->group(function () {
         //places resource
         Route::apiResource('/places', App\Http\Controllers\Api\Admin\PlaceController::class, ['except' => ['create', 'edit'], 'as' => 'admin']);
 
+        //properties resource
+        Route::apiResource('/properties', App\Http\Controllers\Api\Admin\PropertyController::class, ['except' => ['create', 'edit'], 'as' => 'admin']);
+
         //sliders resource
         Route::apiResource('/sliders', App\Http\Controllers\Api\Admin\SliderController::class, ['except' => ['create', 'show', 'edit', 'update'], 'as' => 'admin']);
 
