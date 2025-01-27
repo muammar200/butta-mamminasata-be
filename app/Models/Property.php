@@ -24,7 +24,9 @@ class Property extends Model
         'address',
         'longitude',
         'latitude',
-        'description'
+        'description',
+        'size',
+        'area',
     ];
 
     /**
