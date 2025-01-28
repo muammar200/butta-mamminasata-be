@@ -17,7 +17,11 @@ class Category extends Model
     protected $fillable = [
         'name',
         'slug',
-        'image'
+        'address',
+        'type',
+        'image',
+        'latitude',
+        'longitude'
     ];
 
     /**
@@ -28,6 +32,11 @@ class Category extends Model
     public function places()
     {
         return $this->hasMany(Place::class);
+    }
+
+    public function properties()
+    {
+        return $this->hasMany(Property::class);
     }
 
     /**

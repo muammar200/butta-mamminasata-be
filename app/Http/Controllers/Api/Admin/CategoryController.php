@@ -39,6 +39,10 @@ class CategoryController extends Controller
         $validator = Validator::make($request->all(), [
             'image'    => 'required|image|mimes:jpeg,jpg,png|max:2000',
             'name'     => 'required|unique:categories',
+            'type' => 'required',
+            'address' => 'required',
+            'latitude'      => 'required',
+            'longitude'     => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -54,6 +58,10 @@ class CategoryController extends Controller
             'image' => $image->hashName(),
             'name' => $request->name,
             'slug' => Str::slug($request->name, '-'),
+            'type' => $request->type,
+            'address' => $request->address,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
         ]);
 
         if ($category) {
@@ -95,6 +103,10 @@ class CategoryController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name'     => 'required|unique:categories,name,' . $category->id,
+            'type' => 'required',
+            'address' => 'required',
+            'latitude'      => 'required',
+            'longitude'     => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -116,6 +128,8 @@ class CategoryController extends Controller
                 'image' => $image->hashName(),
                 'name' => $request->name,
                 'slug' => Str::slug($request->name, '-'),
+                'type' => $request->type,
+                'address' => $request->address,
             ]);
         }
 
@@ -123,6 +137,10 @@ class CategoryController extends Controller
         $category->update([
             'name' => $request->name,
             'slug' => Str::slug($request->name, '-'),
+            'type' => $request->type,
+            'address' => $request->address,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
         ]);
 
         if ($category) {
