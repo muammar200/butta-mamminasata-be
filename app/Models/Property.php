@@ -9,6 +9,8 @@ class Property extends Model
 {
     use HasFactory;
 
+    protected $with = ['category', 'images'];
+
     /**
      * fillable
      *
@@ -17,13 +19,10 @@ class Property extends Model
     protected $fillable = [
         'user_id',
         'category_id',
-        'price',
         'type',
+        'price',
         'phone',
         'office_hours',
-        'address',
-        'longitude',
-        'latitude',
         'description',
         'size',
         'area',
