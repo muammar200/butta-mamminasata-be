@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Models\User;
-use App\Models\Place;
 use App\Models\Slider;
 use App\Models\Category;
+use App\Models\Property;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -22,8 +22,15 @@ class DashboardController extends Controller
         //count categories
         $categories = Category::count();
 
-        //count places
-        $places = Place::count();
+        //count housings
+        $housings = Property::whereHas('category', function ($q) {
+            $q->where('type', 'rumah');
+        })->count();
+
+        //count housings
+        $kavlings = Property::whereHas('category', function ($q) {
+            $q->where('type', 'kavling');
+        })->count();
 
         //count sliders
         $sliders = Slider::count();
@@ -36,7 +43,8 @@ class DashboardController extends Controller
             'message'   => 'Statistik Data',
             'data'      => [
                 'categories' => $categories,
-                'places'     => $places,
+                'housings'     => $housings,
+                'kavlings'   => $kavlings,
                 'sliders'   => $sliders,
                 'users'  => $users
             ]
