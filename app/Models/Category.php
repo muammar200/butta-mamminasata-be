@@ -18,6 +18,7 @@ class Category extends Model
         'name',
         'slug',
         'address',
+        'office_hours',
         'type',
         'image',
         'latitude',

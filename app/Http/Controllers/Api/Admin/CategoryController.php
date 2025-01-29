@@ -41,6 +41,7 @@ class CategoryController extends Controller
             'name'     => 'required|unique:categories',
             'type' => 'required',
             'address' => 'required',
+            'office_hours' => 'required',
             'latitude'      => 'required',
             'longitude'     => 'required',
         ]);
@@ -60,6 +61,7 @@ class CategoryController extends Controller
             'slug' => Str::slug($request->name, '-'),
             'type' => $request->type,
             'address' => $request->address,
+            'office_hours' => $request->office_hours,
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
         ]);
@@ -105,6 +107,7 @@ class CategoryController extends Controller
             'name'     => 'required|unique:categories,name,' . $category->id,
             'type' => 'required',
             'address' => 'required',
+            'office_hours' => 'required',
             'latitude'      => 'required',
             'longitude'     => 'required',
         ]);
@@ -130,6 +133,7 @@ class CategoryController extends Controller
                 'slug' => Str::slug($request->name, '-'),
                 'type' => $request->type,
                 'address' => $request->address,
+                'office_hours' => $request->office_hours,
             ]);
         }
 
@@ -139,6 +143,7 @@ class CategoryController extends Controller
             'slug' => Str::slug($request->name, '-'),
             'type' => $request->type,
             'address' => $request->address,
+            'office_hours' => $request->office_hours,
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
         ]);
