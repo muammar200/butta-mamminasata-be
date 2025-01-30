@@ -29,7 +29,7 @@ class HousingController extends Controller
     public function getHousings()
     {
         //get housings 
-        $housings = Property::with('category', 'images', 'property_facilities', 'property_rooms')
+        $housings = Property::with('category', 'images')
         ->when(request()->q, function ($query) {
             $query->where(function ($q) {
                 $q->where('price', 'like', '%' . request()->q . '%')
@@ -58,14 +58,13 @@ class HousingController extends Controller
             'type' => 'required',
             'price'   => 'required',
             'phone'       => 'required',
-            'office_hours'  => 'required',
             'description'     => 'required',
             'size'     => 'required',
             'area'     => 'required',
             'image'     => 'required',
             'facility_name.*' => 'nullable',
             'rooms.*.room_type' => 'nullable|in:kamar tidur,kamar mandi,ruang tamu,dapur',
-            'rooms.*.quantity'  => 'nullable|integer|min:1',
+            'rooms.*.quantity'  => 'nullable|integer',
         ]);
 
 
@@ -80,7 +79,6 @@ class HousingController extends Controller
             'type' => $request->type,
             'price'   => $request->price,
             'phone'       => $request->phone,
-            'office_hours'  => $request->office_hours,
             'size' => $request->size,
             'area' => $request->area,
             'description'     => $request->description,
@@ -101,13 +99,13 @@ class HousingController extends Controller
         // create room
         if ($request->rooms) {
             foreach ($request->rooms as $room) {
-                if ($room['room_type'] && $room['quantity']) {
+                // if ($room['room_type'] && $room['quantity']) {
                     PropertyRoom::create([
                         'property_id' => $property->id,
                         'room_type'   => $room['room_type'],
                         'quantity'    => $room['quantity'],
                     ]);
-                }
+                // }
             }
         }
 
@@ -142,7 +140,7 @@ class HousingController extends Controller
 
     public function show($id)
     {
-        $property = Property::with('category', 'images', 'property_facilities', 'property_rooms')->whereId($id)->first();
+        $property = Property::with('property_facilities', 'property_rooms')->whereId($id)->first();
 
         if ($property) {
             //return success with Api Resource
@@ -162,13 +160,12 @@ class HousingController extends Controller
             'type'          => 'required',
             'price'         => 'required',
             'phone'         => 'required',
-            'office_hours'  => 'required',
             'description'   => 'required',
             'size'          => 'required',
             'area'          => 'required',
             'facility_name.*' => 'nullable',
             'rooms.*.room_type' => 'nullable|in:kamar tidur,kamar mandi,ruang tamu,dapur',
-            'rooms.*.quantity'  => 'nullable|integer|min:1',
+            'rooms.*.quantity'  => 'nullable|integer',
         ]);
 
         if ($validator->fails()) {
@@ -182,7 +179,6 @@ class HousingController extends Controller
             'type'          => $request->type,
             'price'         => $request->price,
             'phone'         => $request->phone,
-            'office_hours'  => $request->office_hours,
             'size'          => $request->size,
             'area'          => $request->area,
             'description'   => $request->description,
@@ -205,13 +201,13 @@ class HousingController extends Controller
         if ($request->rooms) {
             $property->property_rooms()->delete(); //hapus ruangan lama
             foreach ($request->rooms as $room) {
-                if ($room['room_type'] && $room['quantity']) {
+                // if ($room['room_type'] && $room['quantity']) {
                     PropertyRoom::create([
                         'property_id' => $property->id,
                         'room_type'   => $room['room_type'],
                         'quantity'    => $room['quantity'],
                     ]);
-                }
+                // }
             }
         }
 
