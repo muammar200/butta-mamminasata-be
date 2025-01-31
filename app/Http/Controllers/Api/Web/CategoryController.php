@@ -28,13 +28,13 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($slug)
+    public function show($id)
     {
-        $category = Category::with('places.category', 'places.images')->where('slug', $slug)->first();
+        $category = Category::with('properties.category', 'properties.images')->where('id', $id)->first();
 
         if ($category) {
             //return success with Api Resource
-            return new CategoryResource(true, 'List Data Places By : ' . $category->name, $category);
+            return new CategoryResource(true, 'List Data Properties By : ' . $category->name, $category);
         }
 
         //return failed with Api Resource
