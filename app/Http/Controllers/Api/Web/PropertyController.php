@@ -18,7 +18,9 @@ class PropertyController extends Controller
     {
         //get property
         $properties = Property::with('category', 'images')->when(request()->q, function ($properties) {
-            // $properties = $properties->where('title', 'like', '%' . request()->q . '%');
+            $properties = $properties->where('type', 'like', '%' . request()->q . '%')->orWhere('price', 'like', '%' . request()->q . '%')->orWhere('size', 'like', '%' . request()->q . '%')->orWhere('area', 'like', '%' . request()->q . '%')->orWhere('description', 'like', '%' . request()->q . '%')->orWhereHas('category', function ($properties) {
+                $properties->where('name', 'like', '%' . request()->q . '%')->orwhere('address', 'like', '%' . request()->q . '%')->orwhere('type', 'like', '%' . request()->q . '%');
+            });
         })->latest()->paginate(8);
 
         //return with Api Resource
@@ -33,7 +35,7 @@ class PropertyController extends Controller
      */
     public function show($id)
     {
-        $property = Property::with('category', 'images')->where('id', $id)->first();
+        $property = Property::with('category', 'images', 'property_facilities', 'property_rooms')->where('id', $id)->first();
 
         if ($property) {
             //return success with Api Resource

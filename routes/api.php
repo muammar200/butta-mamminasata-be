@@ -26,11 +26,6 @@ Route::prefix('admin')->group(function () {
         //categories resource
         Route::apiResource('/categories', App\Http\Controllers\Api\Admin\CategoryController::class, ['except' => ['create', 'edit'], 'as' => 'admin']);
 
-        //places resource
-        Route::apiResource('/places', App\Http\Controllers\Api\Admin\PlaceController::class, ['except' => ['create', 'edit'], 'as' => 'admin']);
-
-        //properties resource
-        // Route::apiResource('/properties', App\Http\Controllers\Api\Admin\PropertyController::class, ['except' => ['create', 'edit'], 'as' => 'admin']);
 
         //housings resource
         Route::apiResource('/housings', App\Http\Controllers\Api\Admin\HousingController::class, ['except' => ['create', 'edit'], 'as' => 'admin']);
@@ -57,22 +52,21 @@ Route::prefix('web')->group(function () {
     Route::get('/categories', [App\Http\Controllers\Api\Web\CategoryController::class, 'index', ['as' => 'web']]);
 
     //route categories show
-    Route::get('/categories/{id?}', [App\Http\Controllers\Api\Web\CategoryController::class, 'show', ['as' => 'web']]);
+    Route::get('/categories/{slug?}', [App\Http\Controllers\Api\Web\CategoryController::class, 'show', ['as' => 'web']]);
 
-    //route places index
-    Route::get('/places', [App\Http\Controllers\Api\Web\PlaceController::class, 'index', ['as' => 'web']]);
 
-    //route places index
+    //route properties index
     Route::get('/properties', [App\Http\Controllers\Api\Web\PropertyController::class, 'index', ['as' => 'web']]);
 
     //route places show
-    Route::get('/places/{slug?}', [App\Http\Controllers\Api\Web\PlaceController::class, 'show', ['as' => 'web']]);
     Route::get('/properties/{id?}', [App\Http\Controllers\Api\Web\PropertyController::class, 'show', ['as' => 'web']]);
 
     //route all places index
-    // Route::get('/all_places', [App\Http\Controllers\Api\Web\PropertyController::class, 'all_places', ['as' => 'web']]);
-    Route::get('/all_properties', [App\Http\Controllers\Api\Web\PropertyController::class, 'all_places', ['as' => 'web']]);
+    Route::get('/all_places', [App\Http\Controllers\Api\Web\CategoryController::class, 'all_places', ['as' => 'web']]);
 
     //route sliders
     Route::get('/sliders', [App\Http\Controllers\Api\Web\SliderController::class, 'index', ['as' => 'web']]);
+
+    //route locations
+    Route::get('/locations', [App\Http\Controllers\Api\Web\LocationController::class, 'index', ['as' => 'web']]);
 });

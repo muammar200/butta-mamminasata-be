@@ -28,9 +28,9 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($slug)
     {
-        $category = Category::with('properties.category', 'properties.images')->where('id', $id)->first();
+        $category = Category::with('properties.category', 'properties.images')->where('slug', $slug)->first();
 
         if ($category) {
             //return success with Api Resource
@@ -40,4 +40,14 @@ class CategoryController extends Controller
         //return failed with Api Resource
         return new CategoryResource(false, 'Data Category Tidak Ditemukan!', null);
     }
+
+    public function all_places()
+    {
+        //get places
+        $properties = Category::latest()->get();
+
+        //return with Api Resource
+        return new CategoryResource(true, 'List Data Places', $properties);
+    }
+
 }
