@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api\Web;
 
 use App\Models\Category;
+use App\Models\Property;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CategoryResource;
+use App\Http\Resources\PropertyResource;
 
 class CategoryController extends Controller
 {
@@ -32,13 +34,15 @@ class CategoryController extends Controller
     {
         $category = Category::with('properties.category', 'properties.images')->where('slug', $slug)->first();
 
-        if ($category) {
-            //return success with Api Resource
-            return new CategoryResource(true, 'List Data Properties By : ' . $category->name, $category);
+        $properties = Property::with('category', 'images')
+        ->where('category_id', $category->id)
+        ->paginate(8);
+
+        if ($properties) {
+            return new PropertyResource(true, 'List Data Properties By Category', $properties);
         }
 
-        //return failed with Api Resource
-        return new CategoryResource(false, 'Data Category Tidak Ditemukan!', null);
+        return new PropertyResource(false, 'Data Tidak Ditemukan!', null);
     }
 
     public function all_places()
