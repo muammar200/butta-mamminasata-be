@@ -6,6 +6,7 @@ use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\CategoryResource;
 use Illuminate\Support\Facades\Validator;
@@ -165,15 +166,44 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //remove image
-        Storage::disk('local')->delete('public/categories/' . basename($category->image));
+        //FIX: hapus lokasi otomatis menghapus seluruh properti (perumahan/kavling)
+        //beserta gambar, fasilitas, dan ruangannya. Dibungkus transaction (all-or-nothing).
+        DB::beginTransaction();
 
-        if ($category->delete()) {
+        try {
+            foreach ($category->properties()->get() as $property) {
+
+                //hapus file + record gambar properti
+                foreach ($property->images()->get() as $image) {
+                    Storage::disk('local')->delete('public/properties/' . basename($image->image));
+                    $image->delete();
+                }
+
+                //hapus fasilitas & ruangan properti
+                $property->property_facilities()->delete();
+                $property->property_rooms()->delete();
+
+                //hapus properti
+                $property->delete();
+            }
+
+            //hapus data places lama (jika ada) agar tidak menghalangi delete
+            $category->places()->delete();
+
+            //remove image
+            Storage::disk('local')->delete('public/categories/' . basename($category->image));
+
+            $category->delete();
+
+            DB::commit();
+
             //return success with Api Resource
             return new CategoryResource(true, 'Data Category Berhasil Dihapus!', null);
-        }
+        } catch (\Exception $e) {
+            DB::rollBack();
 
-        //return failed with Api Resource
-        return new CategoryResource(false, 'Data Category Gagal Dihapus!', null);
+            //return failed with Api Resource
+            return new CategoryResource(false, 'Data Category Gagal Dihapus! ' . $e->getMessage(), null);
+        }
     }
 }
